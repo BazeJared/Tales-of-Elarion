@@ -95,7 +95,7 @@ class Player(pygame.sprite.Sprite):
         collide = pygame.sprite.spritecollide(self, self.game.blocks, False, pygame.sprite.collide_rect_ratio(0.85))
 
         if collide:
-            self.game.collided = True
+            self.game.collided_block = True
             if pressed[pygame.K_LEFT]:
                 self.rect.x += player_steps
             elif pressed[pygame.K_RIGHT]:
@@ -105,7 +105,7 @@ class Player(pygame.sprite.Sprite):
             elif pressed[pygame.K_DOWN]:
                 self.rect.y -= player_steps
         else:
-            self.game.collided = False
+            self.game.collided_block = False
 
 
     def collide_enemy(self):
@@ -113,7 +113,7 @@ class Player(pygame.sprite.Sprite):
         collide = pygame.sprite.spritecollide(self, self.game.enemies, False, pygame.sprite.collide_rect_ratio(0.85))
         
         if collide:
-            self.game.collided = True
+            self.game.collided_enemy = True
             if pressed[pygame.K_LEFT]:
                 self.rect.x += player_steps
             elif pressed[pygame.K_RIGHT]:
@@ -123,7 +123,7 @@ class Player(pygame.sprite.Sprite):
             elif pressed[pygame.K_DOWN]:
                 self.rect.y -= player_steps
         else:
-            self.game.collided = False
+            self.game.collided_enemy = False
 
 
 

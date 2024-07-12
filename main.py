@@ -13,11 +13,12 @@ class SpriteSheet:
     
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((window_width, window_height))
+        self.screen = pygame.display.set_mode((window_width, window_height),pygame.RESIZABLE)
         self.clock = pygame.time.Clock()
         self.terrain_spritesheet = SpriteSheet('assets/sprites.png')
         self.running = True
-        self.collided = False
+        self.collided_enemy = False
+        self.collided_block = False
 
     def create_tilemap(self):
         for i, row in enumerate(tilemap):
@@ -35,6 +36,7 @@ class Game:
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.blocks = pygame.sprite.LayeredUpdates()
         self.enemies = pygame.sprite.LayeredUpdates()
+        self.player = pygame.sprite.LayeredUpdates()
         self.create_tilemap()
         
     def update(self):
@@ -52,7 +54,7 @@ class Game:
         pygame.display.update()
 
     def camera(self):
-        if self.collided == False:
+        if self.collided_enemy == False and self.collided_block == False:
             pressed = pygame.key.get_pressed()
 
             if pressed[pygame.K_LEFT]:
