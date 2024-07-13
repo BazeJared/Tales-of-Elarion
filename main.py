@@ -27,7 +27,7 @@ class Game:
                 if col == 'B':
                     Block(self,j,i)
                 if col == 'P':
-                    Player(self,j,i)
+                    self.player = Player(self,j,i)
                 if col == 'E':
                     Enemy(self,j,i)
                 #Ogre
@@ -36,7 +36,8 @@ class Game:
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.blocks = pygame.sprite.LayeredUpdates()
         self.enemies = pygame.sprite.LayeredUpdates()
-        self.player = pygame.sprite.LayeredUpdates()
+        self.mainPlayer = pygame.sprite.LayeredUpdates()
+        self.weapons = pygame.sprite.LayeredUpdates()
         self.create_tilemap()
         
     def update(self):
@@ -57,16 +58,16 @@ class Game:
         if self.collided_enemy == False and self.collided_block == False:
             pressed = pygame.key.get_pressed()
 
-            if pressed[pygame.K_LEFT]:
+            if pressed[pygame.K_a]:
                 for i, sprite in enumerate(self.all_sprites):
                     sprite.rect.x += player_steps
-            elif pressed[pygame.K_RIGHT]:
+            elif pressed[pygame.K_d]:
                 for i, sprite in enumerate(self.all_sprites):
                     sprite.rect.x -= player_steps
-            elif pressed[pygame.K_UP]:
+            elif pressed[pygame.K_w]:
                 for i, sprite in enumerate(self.all_sprites):
                     sprite.rect.y += player_steps
-            elif pressed[pygame.K_DOWN]:
+            elif pressed[pygame.K_s]:
                 for i, sprite in enumerate(self.all_sprites):
                     sprite.rect.y -= player_steps
 

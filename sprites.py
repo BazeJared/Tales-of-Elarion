@@ -42,7 +42,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
         self._layer = player_layer
-        self.groups = self.game.all_sprites
+        self.healthbar = Player_Health_Bar(game,x,y)
+        self.groups = self.game.all_sprites, self.game.mainPlayer
         pygame.sprite.Sprite.__init__(self, self.groups)
         
         self.x = x*tilesize
@@ -67,16 +68,16 @@ class Player(pygame.sprite.Sprite):
     def move(self):
         pressed = pygame.key.get_pressed()
 
-        if pressed[pygame.K_LEFT]:
+        if pressed[pygame.K_a]:
             self.x_change = self.x_change - player_steps
             self.direction = 'left'
-        elif pressed[pygame.K_RIGHT]:
+        elif pressed[pygame.K_d]:
             self.x_change = self.x_change + player_steps
             self.direction = 'right'
-        elif pressed[pygame.K_UP]:
+        elif pressed[pygame.K_w]:
             self.y_change = self.y_change - player_steps
             self.direction = 'up'
-        elif pressed[pygame.K_DOWN]:
+        elif pressed[pygame.K_s]:
             self.y_change = self.y_change + player_steps
             self.direction = 'down'
 
@@ -96,13 +97,13 @@ class Player(pygame.sprite.Sprite):
 
         if collide:
             self.game.collided_block = True
-            if pressed[pygame.K_LEFT]:
+            if pressed[pygame.K_a]:
                 self.rect.x += player_steps
-            elif pressed[pygame.K_RIGHT]:
+            elif pressed[pygame.K_d]:
                 self.rect.x -= player_steps
-            elif pressed[pygame.K_UP]:
+            elif pressed[pygame.K_w]:
                 self.rect.y += player_steps
-            elif pressed[pygame.K_DOWN]:
+            elif pressed[pygame.K_s]:
                 self.rect.y -= player_steps
         else:
             self.game.collided_block = False
@@ -114,20 +115,16 @@ class Player(pygame.sprite.Sprite):
         
         if collide:
             self.game.collided_enemy = True
-            if pressed[pygame.K_LEFT]:
+            if pressed[pygame.K_a]:
                 self.rect.x += player_steps
-            elif pressed[pygame.K_RIGHT]:
+            elif pressed[pygame.K_d]:
                 self.rect.x -= player_steps
-            elif pressed[pygame.K_UP]:
+            elif pressed[pygame.K_w]:
                 self.rect.y += player_steps
-            elif pressed[pygame.K_DOWN]:
+            elif pressed[pygame.K_s]:
                 self.rect.y -= player_steps
         else:
             self.game.collided_enemy = False
-
-
-
-        
 
 #OGRE
 class Enemy(pygame.sprite.Sprite):
@@ -136,6 +133,7 @@ class Enemy(pygame.sprite.Sprite):
         self._layer = enemy_layer
         self.groups = self.game.all_sprites, self.game.enemies
         pygame.sprite.Sprite.__init__(self, self.groups)
+        self.healthbar = Enemy_Health_Bar(game, self, x,y)
         
         self.x = x*tilesize
         self.y = y*tilesize
@@ -201,6 +199,7 @@ class Enemy(pygame.sprite.Sprite):
             self.state = 'stalling'
         
         self.collide_block()
+        self.collide_player()
     
     def collide_block(self):
 
@@ -219,6 +218,64 @@ class Enemy(pygame.sprite.Sprite):
             elif self.direction == 'down':
                 self.rect.y -= enemy_steps
                 self.direction = 'up'
+    def collide_player(self):
+        collide = pygame.sprite.spritecollide(self, self.game.mainPlayer, True)
+        if(collide):
+            self.game.running = False
+
+class Player_Health_Bar(pygame.sprite.Sprite):
+    def __init__(self, game, x,y):
+        self.game = game
+        self._layer = health_layer
+        self.groups = self.game.all_sprites, self.game.mainPlayer
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        
+        self.x = x*tilesize
+        self.y = y*tilesize
+
+        self.width = 40
+        self.height = 10
+        #brickwall
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.fill(green)
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y + tilesize/2
+    
+    def move(self):
+        self.rect.x = self.game.player.rect.x
+        self.rect.y = self.game.player.rect.y - tilesize/2
+    
+    def update(self):
+        self.move()
+
+class Enemy_Health_Bar(pygame.sprite.Sprite):
+    def __init__(self, game,enemy ,x,y):
+        self.enemy = enemy
+        self.game = game
+        self._layer = health_layer
+        self.groups = self.game.all_sprites, self.game.enemies
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        
+        self.x = x*tilesize
+        self.y = y*tilesize
+
+        self.width = 40
+        self.height = 10
+        #brickwall
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.fill(green)
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y + tilesize/2
+    
+    def move(self):
+        self.rect.x = self.enemy.rect.x
+        self.rect.y = self.enemy.rect.y - tilesize/2
+    
+    def update(self):
+        self.move()
+
                  
 
 
