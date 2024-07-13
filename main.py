@@ -28,9 +28,10 @@ class Game:
                     Block(self,j,i)
                 if col == 'P':
                     self.player = Player(self,j,i)
-                if col == 'E':
-                    Enemy(self,j,i)
-                #Ogre
+                if col == 'O':
+                    Ogre(self,j,i)
+                if col == 'I':
+                    Pig(self,j,i)
 
     def create(self):
         self.all_sprites = pygame.sprite.LayeredUpdates()

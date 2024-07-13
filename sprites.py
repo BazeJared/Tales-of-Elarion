@@ -223,6 +223,209 @@ class Enemy(pygame.sprite.Sprite):
         if(collide):
             self.game.running = False
 
+class Ogre(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = enemy_layer
+        self.groups = self.game.all_sprites, self.game.enemies
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.healthbar = Enemy_Health_Bar(game, self, x,y)
+        
+        self.x = x*tilesize
+        self.y = y*tilesize
+
+        self.width = tilesize
+        self.height = tilesize
+
+        self.x_change = 0
+        self.y_change = 0
+
+        # x:0 y:2049
+
+        #ENEMY
+        self.image = self.game.terrain_spritesheet.get_image(256,1888,self.width,self.height)
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        
+        self.direction = random.choice(['left','right','up','down'])
+        self.steps = random.choice([30,40,50,60])
+        self.current_steps = 0
+
+        self.state = 'moving'
+        self.stall_steps = 80
+
+    def move(self):
+            
+        if self.state == 'moving':
+            if self.direction == 'left':
+                self.x_change = self.x_change - enemy_steps
+                self.current_steps += 1
+            elif self.direction == 'right':
+                self.x_change = self.x_change + enemy_steps
+                self.current_steps += 1
+            elif self.direction == 'up':
+                self.y_change = self.y_change - enemy_steps
+                self.current_steps += 1
+            elif self.direction == 'down':
+                self.y_change = self.y_change + enemy_steps
+                self.current_steps += 1
+
+        elif self.state == 'stalling':
+            self.current_steps += 1
+            if self.current_steps == self.stall_steps:
+                self.state = 'moving'
+                self.current_steps = 0
+            
+
+
+    def update(self):
+        self.move()
+
+        self.rect.x = self.rect.x + self.x_change
+        self.rect.y = self.rect.y + self.y_change
+
+        self.x_change = 0
+        self.y_change = 0
+
+        if self.current_steps == self.steps:
+            if self.state != 'stalling':
+                self.current_steps = 0
+            self.direction = random.choice(['left','right','up','down'])
+            self.state = 'stalling'
+        
+        self.collide_block()
+        self.collide_player()
+    
+    def collide_block(self):
+
+        collide_block = pygame.sprite.spritecollide(self, self.game.blocks, False)
+
+        if collide_block:
+            if self.direction == 'left':
+                self.rect.x += enemy_steps
+                self.direction = 'right'
+            elif self.direction == 'right':
+                self.rect.x -= enemy_steps
+                self.direction = 'left'
+            elif self.direction == 'up':
+                self.rect.y += enemy_steps
+                self.direction = 'down'
+            elif self.direction == 'down':
+                self.rect.y -= enemy_steps
+                self.direction = 'up'
+    def collide_player(self):
+        collide = pygame.sprite.spritecollide(self, self.game.mainPlayer, True)
+        if(collide):
+            self.game.running = False
+
+class Pig(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = enemy_layer
+        self.groups = self.game.all_sprites, self.game.enemies
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        
+        self.x = x*tilesize
+        self.y = y*tilesize
+
+        self.width = tilesize
+        self.height = tilesize
+
+        self.x_change = 0
+        self.y_change = 0
+
+        # x:0 y:2049
+
+        #ENEMY
+        self.image = self.game.terrain_spritesheet.get_image(0,2048,self.width,self.height)
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        
+        self.direction = random.choice(['left','right','up','down'])
+        self.steps = random.choice([30,40,50,60])
+        self.current_steps = 0
+
+        self.state = 'moving'
+        self.stall_steps = 80
+
+    def move(self):
+            
+        if self.state == 'moving':
+            if self.direction == 'left':
+                self.x_change = self.x_change - enemy_steps
+                self.current_steps += 1
+            elif self.direction == 'right':
+                self.x_change = self.x_change + enemy_steps
+                self.current_steps += 1
+            elif self.direction == 'up':
+                self.y_change = self.y_change - enemy_steps
+                self.current_steps += 1
+            elif self.direction == 'down':
+                self.y_change = self.y_change + enemy_steps
+                self.current_steps += 1
+
+        elif self.state == 'stalling':
+            self.current_steps += 1
+            if self.current_steps == self.stall_steps:
+                self.state = 'moving'
+                self.current_steps = 0
+            
+
+
+    def update(self):
+        self.move()
+
+        self.rect.x = self.rect.x + self.x_change
+        self.rect.y = self.rect.y + self.y_change
+
+        self.x_change = 0
+        self.y_change = 0
+
+        if self.current_steps == self.steps:
+            if self.state != 'stalling':
+                self.current_steps = 0
+            self.direction = random.choice(['left','right','up','down'])
+            self.state = 'stalling'
+        
+        self.collide_block()
+        self.collide_player()
+    
+    def collide_block(self):
+
+        collide_block = pygame.sprite.spritecollide(self, self.game.blocks, False)
+
+        if collide_block:
+            if self.direction == 'left':
+                self.rect.x += enemy_steps
+                self.direction = 'right'
+            elif self.direction == 'right':
+                self.rect.x -= enemy_steps
+                self.direction = 'left'
+            elif self.direction == 'up':
+                self.rect.y += enemy_steps
+                self.direction = 'down'
+            elif self.direction == 'down':
+                self.rect.y -= enemy_steps
+                self.direction = 'up'
+    def collide_player(self):
+        collide = pygame.sprite.spritecollide(self, self.game.mainPlayer, False)
+        if collide:
+            if self.direction == 'left':
+                self.rect.x += enemy_steps
+                self.direction = 'right'
+            elif self.direction == 'right':
+                self.rect.x -= enemy_steps
+                self.direction = 'left'
+            elif self.direction == 'up':
+                self.rect.y += enemy_steps
+                self.direction = 'down'
+            elif self.direction == 'down':
+                self.rect.y -= enemy_steps
+                self.direction = 'up'
+
+
 class Player_Health_Bar(pygame.sprite.Sprite):
     def __init__(self, game, x,y):
         self.game = game
@@ -234,7 +437,7 @@ class Player_Health_Bar(pygame.sprite.Sprite):
         self.y = y*tilesize
 
         self.width = 40
-        self.height = 10
+        self.height = 5
         #brickwall
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill(green)
@@ -261,7 +464,7 @@ class Enemy_Health_Bar(pygame.sprite.Sprite):
         self.y = y*tilesize
 
         self.width = 40
-        self.height = 10
+        self.height = 5
         #brickwall
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill(green)
