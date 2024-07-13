@@ -8,11 +8,16 @@ tilesize = 32
 player_steps = 3
 enemy_steps = 1
 
+
+health_layer = 6
+player_layer = 5
 enemy_layer = 4
-player_layer = 3
+weapon_layer = 3
 blocks_layer = 2
 ground_layer = 1
 black = (0,0,0)
+red = (255,0,0)
+green = (0,255,0)
 tilemap = [
     'BBBBBBBBBBBBBBBBBBBB',
     'B..................B',
